@@ -40,22 +40,23 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable String id, @RequestBody Employee updatedData) {
+        Employee existingEmployee = employee.stream()
+                .filter(emp -> emp.getId() == Integer.parseInt(id))
+                .findFirst()
+                .orElse(null);
 
-        for (Employee emp : employees) {
-            if (emp.getId() == Integer.parseInt(id)) {
-                // Update fields of the found employee
-                emp.setName(updatedData.getName());
-                emp.setBirthday(updatedData.getBirthday());
-                emp.setGender(updatedData.getGender());
-                emp.setSalary(updatedData.getSalary());
-
-                // Return the updated employee
-                return ResponseEntity.ok(emp);
-            }
+        if (existingEmployee == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        existingEmployee.setName(updatedData.getName());
+        existingEmployee.setBirthday(updatedData.getBirthday());
+        existingEmployee.setGender(updatedData.getGender());
+        existingEmployee.setSalary(updatedData.getSalary());
+
+        return ResponseEntity.ok(existingEmployee);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable String id) {
@@ -63,9 +64,9 @@ public class EmployeeController {
             Employee emp = iterator.next();
             if (emp.getId() == Integer.parseInt(id)) {
                 iterator.remove();
-                return ResponseEntity.noContent().build(); // 204 No Content
+                return ResponseEntity.noContent().build();
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

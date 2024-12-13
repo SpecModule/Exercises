@@ -6,6 +6,9 @@ import com.huyenho.demo.dto.exception.ErrorCode;
 import com.huyenho.demo.model.Student;
 import com.huyenho.demo.service.IStudentService;
 import com.huyenho.demo.service.impl.StudentService;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/students")
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class StudentController {
-    private IStudentService studentService = new StudentService();
+    IStudentService studentService;
 
     @GetMapping
     public ResponseEntity<List<Student>> getStudents() {

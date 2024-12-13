@@ -2,11 +2,13 @@ package com.huyenho.demo.repository.impl;
 
 import com.huyenho.demo.model.Student;
 import com.huyenho.demo.repository.IStudentRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Repository
 public class StudentRepository implements IStudentRepository {
     private List<Student> students = new ArrayList<>(
             Arrays.asList(

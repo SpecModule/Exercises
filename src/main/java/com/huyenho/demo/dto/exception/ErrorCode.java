@@ -12,7 +12,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 public enum ErrorCode {
-    STUDENT_NOT_EXIST(40401, "Student is not exist", HttpStatus.NOT_FOUND);
+    STUDENT_NOT_EXIST(40401, "Student is not exist", HttpStatus.NOT_FOUND),
+    EMPLOYEE_NOT_EXIST(40402, "Employee is not exist", HttpStatus.NOT_FOUND);
     Integer code;
     String message;
     HttpStatus httpStatus;

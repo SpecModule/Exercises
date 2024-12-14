@@ -6,6 +6,11 @@ import com.huyenho.demo.dto.JsonResponse;
 import com.huyenho.demo.dto.exception.AppException;
 import com.huyenho.demo.dto.exception.ErrorCode;
 import com.huyenho.demo.model.Employee;
+import com.huyenho.demo.model.Student;
+import com.huyenho.demo.service.IEmployeeService;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,67 +20,45 @@ import java.util.*;
 @RestController
 @CrossOrigin
 @RequestMapping("/employee")
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmployeeController {
-    private List<Employee> employee = new ArrayList<>(
-            Arrays.asList(
-                    new Employee(1, "Ho Thi Huyen", LocalDate.of(2004, 3, 6), Gender.FEMALE.getGender(), "0354382937", 16000000, 1),
-                    new Employee(2, "Ho Van Hai", LocalDate.of(2000, 9, 12), Gender.MALE.getGender(), "0354382937", 20000000, 2)
-            )
-    );
+    IEmployeeService employeeService;
 
     @GetMapping("")
     public ResponseEntity<?> getAllEmployees() {
-        return JsonResponse.ok(employee);
+        return JsonResponse.ok(employeeService.getAllEmployees());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getEmployee(@PathVariable String id) {
-        for (Employee emp : employee) {
-            if (emp.getId() == Integer.parseInt(id)) {
-                return JsonResponse.ok(emp);
-            }
+        Employee empl = employeeService.getEmployee(id);
+        if (empl == null) {
+            throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
         }
-        throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
+        return JsonResponse.ok(empl);
     }
 
     @PostMapping("")
     public ResponseEntity<?> addEmployee(@RequestBody Employee emp) {
-        emp.setId((int) (Math.random() * 100000));
-        employee.add(emp);
-        return JsonResponse.created(employee);
+        return JsonResponse.created(employeeService.addEmployee(emp));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Employee>> updateEmployee(@PathVariable String id, @RequestBody Employee updatedData) {
-        Employee existingEmployee = employee.stream()
-                .filter(emp -> emp.getId() == Integer.parseInt(id))
-                .findFirst()
-                .orElse(null);
+        Employee updatedEmployee = employeeService.updateEmployee(id, updatedData);
 
-        if (existingEmployee == null) {
+        if (updatedEmployee == null) {
             throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
         }
 
-        existingEmployee.setName(updatedData.getName());
-        existingEmployee.setBirthday(updatedData.getBirthday());
-        existingEmployee.setGender(updatedData.getGender());
-        existingEmployee.setPhone(updatedData.getPhone());
-        existingEmployee.setSalary(updatedData.getSalary());
-
-        return JsonResponse.ok(existingEmployee);
+        return JsonResponse.ok(updatedEmployee);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable String id) {
-        for (Iterator<Employee> iterator = employee.iterator(); iterator.hasNext();) {
-            Employee emp = iterator.next();
-            if (emp.getId() == Integer.parseInt(id)) {
-                iterator.remove();
-                return JsonResponse.noContent();
-            }
-        }
-        throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
+        employeeService.deleteEmployee(id);
+        return JsonResponse.noContent();
     }
 
     @GetMapping("/search")
@@ -88,38 +71,12 @@ public class EmployeeController {
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String departmentId) {
 
-        final Double salaryFrom;
-        final Double salaryTo;
+        List<Employee> filterEmployee = employeeService.findByAttributes(name, dobFrom, dobTo, gender, salaryRange, phone, departmentId);
 
-        if (salaryRange != null && salaryRange.matches("\\d+-\\d+")) {
-            String[] range = salaryRange.split("-");
-            salaryFrom = Double.parseDouble(range[0]);
-            salaryTo = Double.parseDouble(range[1]);
-        } else {
-            salaryFrom = null;
-            salaryTo = null;
-        }
-
-        final LocalDate parsedDobFrom = dobFrom != null ? LocalDate.parse(dobFrom) : null;
-        final LocalDate parsedDobTo = dobTo != null ? LocalDate.parse(dobTo) : null;
-
-        final Integer parsedDepartmentId = departmentId != null ? Integer.parseInt(departmentId) : null;
-
-        List<Employee> filteredEmployees = employee.stream()
-                .filter(emp -> name == null || emp.getName().toLowerCase().contains(name.toLowerCase()))
-                .filter(emp -> parsedDobFrom == null || !emp.getBirthday().isBefore(parsedDobFrom))
-                .filter(emp -> parsedDobTo == null || !emp.getBirthday().isAfter(parsedDobTo))
-                .filter(emp -> gender == null || emp.getGender().equalsIgnoreCase(gender))
-                .filter(emp -> salaryFrom == null || emp.getSalary() >= salaryFrom)
-                .filter(emp -> salaryTo == null || emp.getSalary() <= salaryTo)
-                .filter(emp -> phone == null || emp.getPhone().contains(phone))
-                .filter(emp -> parsedDepartmentId == null || emp.getDepartmentId().equals(parsedDepartmentId))
-                .toList();
-
-        if (filteredEmployees.isEmpty()) {
+        if (filterEmployee == null) {
             throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
         }
 
-        return JsonResponse.ok(filteredEmployees);
+        return JsonResponse.ok(filterEmployee);
     }
 }

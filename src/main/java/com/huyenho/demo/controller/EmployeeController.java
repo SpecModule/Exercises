@@ -1,16 +1,15 @@
 package com.huyenho.demo.controller;
 
+import com.huyenho.demo.dto.ApiResponse;
 import com.huyenho.demo.dto.Gender;
+import com.huyenho.demo.dto.JsonResponse;
+import com.huyenho.demo.dto.exception.AppException;
+import com.huyenho.demo.dto.exception.ErrorCode;
 import com.huyenho.demo.model.Employee;
-import com.huyenho.demo.model.Student;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -24,29 +23,36 @@ public class EmployeeController {
     );
 
     @GetMapping("")
-    public ResponseEntity<List<Employee>> getAllEmployees() {
-        return ResponseEntity.ok(employee);
+    public ResponseEntity<?> getAllEmployees() {
+        return JsonResponse.ok(employee);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployee(@PathVariable String id) {
+    public ResponseEntity<?> getEmployee(@PathVariable String id) {
         for (Employee emp : employee) {
             if (emp.getId() == Integer.parseInt(id)) {
-                return ResponseEntity.ok(emp);
+                return JsonResponse.ok(emp);
             }
         }
-        return ResponseEntity.notFound().build();
+        throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> addEmployee(@RequestBody Employee emp) {
+        emp.setId((int) (Math.random() * 100000));
+        employee.add(emp);
+        return JsonResponse.created(employee);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable String id, @RequestBody Employee updatedData) {
+    public ResponseEntity<ApiResponse<Employee>> updateEmployee(@PathVariable String id, @RequestBody Employee updatedData) {
         Employee existingEmployee = employee.stream()
                 .filter(emp -> emp.getId() == Integer.parseInt(id))
                 .findFirst()
                 .orElse(null);
 
         if (existingEmployee == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
         }
 
         existingEmployee.setName(updatedData.getName());
@@ -54,7 +60,7 @@ public class EmployeeController {
         existingEmployee.setGender(updatedData.getGender());
         existingEmployee.setSalary(updatedData.getSalary());
 
-        return ResponseEntity.ok(existingEmployee);
+        return JsonResponse.ok(existingEmployee);
     }
 
 
@@ -64,9 +70,9 @@ public class EmployeeController {
             Employee emp = iterator.next();
             if (emp.getId() == Integer.parseInt(id)) {
                 iterator.remove();
-                return ResponseEntity.noContent().build();
+                return JsonResponse.noContent();
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
     }
 }

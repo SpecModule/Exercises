@@ -11,6 +11,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Employee {
     private int id;
     private String name;

@@ -1,16 +1,24 @@
 package com.huyenho.demo.repository;
 
-import com.huyenho.demo.model.Student;
+import com.huyenho.demo.emtity.Student;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
-public interface IStudentRepository {
-    List<Student> findAll();
+public interface IStudentRepository extends JpaRepository<Student, Integer> {
+    List<Student> findByNameContaining(String name);
+//    List<Student> findByNameContainingAndScoreBetween(String name);
 
-    Student findById(int id);
+    //khi có quá nhều attributes
 
-    Student save(Student student);
+    // cú pháp của HQL
+    @Query("""
+        FROM Student WHERE name like CONCAT('%', name, '%')
+        AND (:fromScore IS NULL OR score >= :fromScore)
+        AND (:toScore IS NULL OR score <= :toScore)
+    """)
+    List<Student> findByAttr(String name, double fromScore, double toScore);
+
 }

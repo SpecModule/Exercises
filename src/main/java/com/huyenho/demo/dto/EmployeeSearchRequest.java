@@ -4,6 +4,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Builder
@@ -12,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmployeeSearchRequest {
     String name;
-    String dobFrom;
-    String dobTo;
+    LocalDate dobFrom;
+    LocalDate dobTo;
     String gender;
-    String salaryRange;
+    double salaryRange;
     String phone;
-    String departmentId;
+    Integer departmentId;
 }

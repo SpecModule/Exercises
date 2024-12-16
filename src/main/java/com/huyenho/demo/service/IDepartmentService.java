@@ -1,19 +1,17 @@
 package com.huyenho.demo.service;
 
-import com.huyenho.demo.model.Department;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.huyenho.demo.emtity.Department;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IDepartmentService {
     List<Department> getAllDepartments();
 
-    Department getDepartment(String id);
+    Optional<Department> getDepartment(int id);
 
     Department addDepartment(Department dp);
 
-    Department updateDepartment(String id, Department updatedData);
-    Void deleteDepartment(String id);
+    Department updateDepartment(int id, Department updatedData);
+    void deleteDepartment(int id);
 }

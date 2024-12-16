@@ -1,18 +1,24 @@
 package com.huyenho.demo.repository;
 
-import com.huyenho.demo.model.Employee;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.huyenho.demo.dto.EmployeeSearchRequest;
+import com.huyenho.demo.emtity.Employee;
+import com.huyenho.demo.emtity.Student;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface IEmployeeRepository {
-    List<Employee> findByAttributes(String name, String dobFrom, String dobTo, String gender, String salaryRange, String phone, String departmentId);
-    Void deleteEmployee(String id);
-    Employee updateEmployee(String id, Employee updatedData);
-    List<Employee> getAllEmployees();
-    Employee getEmployee(String id);
-    List<Employee> addEmployee(Employee emp);
+public interface IEmployeeRepository extends JpaRepository<Employee, Integer> {
+
+    @Query("""
+        FROM Employee 
+        WHERE (:#{#employeeSearchRequest.name} IS NULL OR name LIKE CONCAT('%', :#{#employeeSearchRequest.name}, '%'))
+        AND (:#{#employeeSearchRequest.dobFrom} IS NULL OR birthday >= :#{#employeeSearchRequest.dobFrom})
+        AND (:#{#employeeSearchRequest.dobTo} IS NULL OR birthday <= :#{#employeeSearchRequest.dobTo})
+        AND (:#{#employeeSearchRequest.gender} IS NULL OR gender = :#{#employeeSearchRequest.gender})
+        AND (:#{#employeeSearchRequest.salaryRange} = 0 OR salary >= :#{#employeeSearchRequest.salaryRange})
+        AND (:#{#employeeSearchRequest.phone} IS NULL OR phone LIKE CONCAT('%', :#{#employeeSearchRequest.phone}, '%'))
+        AND (:#{#employeeSearchRequest.departmentId} IS NULL OR departmentId = :#{#employeeSearchRequest.departmentId})
+    """)
+    List<Employee> findByAttributes(EmployeeSearchRequest employeeSearchRequest);
 }

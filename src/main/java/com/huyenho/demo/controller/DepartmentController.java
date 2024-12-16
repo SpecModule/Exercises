@@ -1,11 +1,10 @@
 package com.huyenho.demo.controller;
 
 import com.huyenho.demo.dto.ApiResponse;
-import com.huyenho.demo.dto.Gender;
 import com.huyenho.demo.dto.JsonResponse;
 import com.huyenho.demo.dto.exception.AppException;
 import com.huyenho.demo.dto.exception.ErrorCode;
-import com.huyenho.demo.model.Department;
+import com.huyenho.demo.emtity.Department;
 import com.huyenho.demo.service.IDepartmentService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,8 +12,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -30,8 +28,8 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getDepartment(@PathVariable String id) {
-        Department department = departmentService.getDepartment(id);
+    public ResponseEntity<?> getDepartment(@PathVariable int id) {
+        Optional<Department> department = departmentService.getDepartment(id);
 
         if (department != null) {
             return JsonResponse.ok(department);
@@ -46,7 +44,7 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Department>> updateEmployee(@PathVariable String id, @RequestBody Department updatedData) {
+    public ResponseEntity<ApiResponse<Department>> updateEmployee(@PathVariable int id, @RequestBody Department updatedData) {
         Department department = departmentService.updateDepartment(id, updatedData);
 
         if (department != null) {
@@ -58,7 +56,7 @@ public class DepartmentController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDepartment(@PathVariable String id) {
+    public ResponseEntity<Void> deleteDepartment(@PathVariable int id) {
         departmentService.deleteDepartment(id);
         return JsonResponse.noContent();
     }

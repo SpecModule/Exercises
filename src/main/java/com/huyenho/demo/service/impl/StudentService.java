@@ -1,13 +1,11 @@
 package com.huyenho.demo.service.impl;
 
-import com.huyenho.demo.model.Student;
+import com.huyenho.demo.emtity.Student;
 import com.huyenho.demo.repository.IStudentRepository;
-import com.huyenho.demo.repository.impl.StudentRepository;
 import com.huyenho.demo.service.IStudentService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +31,7 @@ public class StudentService implements IStudentService {
 
     @Override
     public Student findById(int id) {
-        return studentRepository.findById(id);
+        return studentRepository.findById(id).get();
     }
 
     @Override
@@ -41,4 +39,20 @@ public class StudentService implements IStudentService {
         return studentRepository.save(student);
     }
 
+    public Student update(int id, Student student) {
+        Student stud = studentRepository.findById(id).get();
+        stud.setName(student.getName());
+        stud.setScore(student.getScore());
+        studentRepository.save(stud);
+        return stud;
+    }
+
+    @Override
+    public List<Student> findByNameContaining(String name) {
+        return studentRepository.findByNameContaining(name);
+    }
+
+    public List<Student> findByAttr(String name, double fromScore, double toScore) {
+        return studentRepository.findByAttr(name, fromScore, toScore);
+    }
 }

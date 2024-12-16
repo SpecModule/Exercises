@@ -1,5 +1,8 @@
 package com.huyenho.demo.controller;
 
+import com.huyenho.demo.emtity.Dictionary;
+import com.huyenho.demo.service.IDictionaryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,18 +13,14 @@ import java.util.Map;
 @RestController
 @CrossOrigin
 public class DictionaryController {
-    Map<String, String> dictionary = new HashMap<String, String>() {{
-        put("hi", "Xin chào");
-        put("eat", "Ăn");
-        put("learn", "Học");
-        put("agreement", "Thoả thuận");
-    }};
+    @Autowired
+    IDictionaryService dictionaryService;
 
     @GetMapping("/dictionary")
     public ResponseEntity<String> getDictionary(@RequestParam String word) {
-        String result = dictionary.get(word.trim().toLowerCase());
+        Dictionary result = dictionaryService.getDictionary(word.trim().toLowerCase());
         return result != null ?
-                new ResponseEntity<>(result, HttpStatus.OK) :
+                new ResponseEntity<>(result.getVietNam(), HttpStatus.OK) :
                 new ResponseEntity<>("Từ vựng này chưa được thêm vào từ điển", HttpStatus.NOT_FOUND);
     }
 }

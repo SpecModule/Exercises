@@ -1,6 +1,6 @@
 package com.huyenho.demo.service;
 
-import com.huyenho.demo.emtity.Student;
+import com.huyenho.demo.entity.Student;
 
 import java.util.List;
 

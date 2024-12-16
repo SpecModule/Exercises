@@ -1,4 +1,4 @@
-package com.huyenho.demo.emtity;
+package com.huyenho.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

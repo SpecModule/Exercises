@@ -1,7 +1,7 @@
 package com.huyenho.demo.service.impl;
 
 import com.huyenho.demo.dto.EmployeeSearchRequest;
-import com.huyenho.demo.emtity.Employee;
+import com.huyenho.demo.entity.Employee;
 import com.huyenho.demo.repository.IEmployeeRepository;
 import com.huyenho.demo.service.IEmployeeService;
 import lombok.AccessLevel;
@@ -37,7 +37,7 @@ public class EmployeeService implements IEmployeeService {
         employee.setSalary(updatedData.getSalary());
         employee.setPhone(updatedData.getPhone());
         employee.setGender(updatedData.getGender());
-        employee.setDepartmentId(updatedData.getDepartmentId());
+        employee.setDepartment(updatedData.getDepartment());
         employeeRepository.save(employee);
         return employee;
     }

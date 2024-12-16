@@ -1,6 +1,6 @@
 package com.huyenho.demo.service.impl;
 
-import com.huyenho.demo.emtity.Department;
+import com.huyenho.demo.entity.Department;
 import com.huyenho.demo.repository.IDepartmentRepository;
 import com.huyenho.demo.service.IDepartmentService;
 import lombok.AccessLevel;

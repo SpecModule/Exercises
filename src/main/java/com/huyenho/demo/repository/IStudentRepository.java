@@ -1,6 +1,6 @@
 package com.huyenho.demo.repository;
 
-import com.huyenho.demo.emtity.Student;
+import com.huyenho.demo.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

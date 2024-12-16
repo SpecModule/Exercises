@@ -5,7 +5,7 @@ import com.huyenho.demo.dto.EmployeeSearchRequest;
 import com.huyenho.demo.dto.JsonResponse;
 import com.huyenho.demo.dto.exception.AppException;
 import com.huyenho.demo.dto.exception.ErrorCode;
-import com.huyenho.demo.emtity.Employee;
+import com.huyenho.demo.entity.Employee;
 import com.huyenho.demo.service.IEmployeeService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

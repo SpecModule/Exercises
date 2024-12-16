@@ -1,6 +1,6 @@
 package com.huyenho.demo.service.impl;
 
-import com.huyenho.demo.emtity.Dictionary;
+import com.huyenho.demo.entity.Dictionary;
 import com.huyenho.demo.repository.IDictionaryRepository;
 import com.huyenho.demo.service.IDictionaryService;
 import lombok.AccessLevel;

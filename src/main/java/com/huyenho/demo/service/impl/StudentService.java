@@ -1,6 +1,6 @@
 package com.huyenho.demo.service.impl;
 
-import com.huyenho.demo.emtity.Student;
+import com.huyenho.demo.entity.Student;
 import com.huyenho.demo.repository.IStudentRepository;
 import com.huyenho.demo.service.IStudentService;
 import lombok.AccessLevel;

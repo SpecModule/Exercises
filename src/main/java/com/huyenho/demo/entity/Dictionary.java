@@ -1,4 +1,4 @@
-package com.huyenho.demo.emtity;
+package com.huyenho.demo.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,8 +7,6 @@ import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -16,14 +14,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Employee {
+public class Dictionary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
-    private LocalDate birthday;
-    private String gender;
-    private String phone;
-    private double salary;
-    private Integer departmentId;
+    private String vietNam;
+    private String english;
 }

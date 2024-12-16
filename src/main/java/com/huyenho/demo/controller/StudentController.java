@@ -3,7 +3,7 @@ package com.huyenho.demo.controller;
 import com.huyenho.demo.dto.ApiResponse;
 import com.huyenho.demo.dto.exception.AppException;
 import com.huyenho.demo.dto.exception.ErrorCode;
-import com.huyenho.demo.emtity.Student;
+import com.huyenho.demo.entity.Student;
 import com.huyenho.demo.service.IStudentService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

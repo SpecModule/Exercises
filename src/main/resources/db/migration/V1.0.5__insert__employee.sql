@@ -1,0 +1,2 @@
+INSERT INTO student_management_pnv_25.employee (birthday, department_id, salary, gender, name, phone) VALUES ('2004-03-06', 1, 12000000, 'Nữ', 'Hồ Thị Huyền', '0354382937');
+INSERT INTO student_management_pnv_25.employee (birthday, department_id, salary, gender, name, phone) VALUES ('2024-12-03', 2, 13000000, 'Nam', 'Hồ Văn Hiên', '0373536337');

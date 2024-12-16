@@ -1,7 +1,7 @@
 package com.huyenho.demo.service;
 
 import com.huyenho.demo.dto.EmployeeSearchRequest;
-import com.huyenho.demo.emtity.Employee;
+import com.huyenho.demo.entity.Employee;
 
 import java.util.List;
 import java.util.Optional;

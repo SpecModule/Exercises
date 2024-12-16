@@ -4,7 +4,7 @@ import com.huyenho.demo.dto.ApiResponse;
 import com.huyenho.demo.dto.JsonResponse;
 import com.huyenho.demo.dto.exception.AppException;
 import com.huyenho.demo.dto.exception.ErrorCode;
-import com.huyenho.demo.emtity.Department;
+import com.huyenho.demo.entity.Department;
 import com.huyenho.demo.service.IDepartmentService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.huyenho.demo.service;
 
-import com.huyenho.demo.emtity.Department;
+import com.huyenho.demo.entity.Department;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,14 +1,11 @@
 package com.huyenho.demo.controller;
 
-import com.huyenho.demo.emtity.Dictionary;
+import com.huyenho.demo.entity.Dictionary;
 import com.huyenho.demo.service.IDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @CrossOrigin

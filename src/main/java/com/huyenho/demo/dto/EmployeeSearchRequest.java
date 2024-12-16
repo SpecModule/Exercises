@@ -19,5 +19,5 @@ public class EmployeeSearchRequest {
     String gender;
     double salaryRange;
     String phone;
-    Integer departmentId;
+    Integer department;
 }

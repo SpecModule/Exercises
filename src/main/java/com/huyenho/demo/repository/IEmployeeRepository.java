@@ -2,6 +2,8 @@ package com.huyenho.demo.repository;
 
 import com.huyenho.demo.dto.EmployeeSearchRequest;
 import com.huyenho.demo.entity.Employee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -19,5 +21,5 @@ public interface IEmployeeRepository extends JpaRepository<Employee, Integer> {
         AND (:#{#employeeSearchRequest.phone} IS NULL OR phone LIKE CONCAT('%', :#{#employeeSearchRequest.phone}, '%'))
         AND (:#{#employeeSearchRequest.department} IS NULL OR department.id = :#{#employeeSearchRequest.department})
     """)
-    List<Employee> findByAttributes(EmployeeSearchRequest employeeSearchRequest);
+    Page<Employee> findByAttributes(EmployeeSearchRequest employeeSearchRequest, Pageable pageable);
 }

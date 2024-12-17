@@ -24,8 +24,8 @@ public class EmployeeService implements IEmployeeService {
     IEmployeeRepository employeeRepository;
 
     @Override
-    public List<Employee> findByAttributes(EmployeeSearchRequest employeeSearchRequest) {
-        return employeeRepository.findByAttributes(employeeSearchRequest);
+    public Page<Employee> findByAttributes(EmployeeSearchRequest employeeSearchRequest, Pageable pageable) {
+        return employeeRepository.findByAttributes(employeeSearchRequest, pageable);
     }
 
     @Override
@@ -42,10 +42,6 @@ public class EmployeeService implements IEmployeeService {
         employee.setDepartment(updatedData.getDepartment());
         employeeRepository.save(employee);
         return employee;
-    }
-
-    public Page<Employee> getAllEmployees(Pageable pageable) {
-        return employeeRepository.findAll(pageable);
     }
 
     public Optional<Employee> getEmployee(int id) {

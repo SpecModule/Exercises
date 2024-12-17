@@ -28,9 +28,9 @@ public class EmployeeController {
     IEmployeeService employeeService;
 
     @GetMapping("")
-    public ResponseEntity<?> getAllEmployees(
+    public ResponseEntity<?> getAllEmployees(EmployeeSearchRequest employeeSearchRequest,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Employee> employees = employeeService.getAllEmployees(pageable);
+        Page<Employee> employees = employeeService.findByAttributes(employeeSearchRequest, pageable);
         return ResponseEntity.ok(employees);
     }
 
@@ -63,17 +63,5 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(@PathVariable int id) {
         employeeService.deleteEmployee(id);
         return JsonResponse.noContent();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<?> searchEmployees(EmployeeSearchRequest employeeSearchRequest) {
-
-        List<Employee> filterEmployee = employeeService.findByAttributes(employeeSearchRequest);
-
-        if (filterEmployee == null) {
-            throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
-        }
-
-        return JsonResponse.ok(filterEmployee);
     }
 }

@@ -9,10 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IEmployeeService {
-    List<Employee> findByAttributes(EmployeeSearchRequest employeeSearchRequest);
+    Page<Employee> findByAttributes(EmployeeSearchRequest employeeSearchRequest, Pageable pageable);
     Employee updateEmployee(int id, Employee updatedData);
     void deleteEmployee(int id);
-    Page<Employee> getAllEmployees(Pageable pageable);
     Optional<Employee> getEmployee(int id);
     List<Employee> addEmployee(Employee emp);
 }

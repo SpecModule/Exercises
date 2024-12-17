@@ -10,8 +10,12 @@ import com.huyenho.demo.service.IEmployeeService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.*;
 
@@ -24,8 +28,10 @@ public class EmployeeController {
     IEmployeeService employeeService;
 
     @GetMapping("")
-    public ResponseEntity<?> getAllEmployees() {
-        return JsonResponse.ok(employeeService.getAllEmployees());
+    public ResponseEntity<?> getAllEmployees(
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Employee> employees = employeeService.getAllEmployees(pageable);
+        return ResponseEntity.ok(employees);
     }
 
     @GetMapping("/{id}")

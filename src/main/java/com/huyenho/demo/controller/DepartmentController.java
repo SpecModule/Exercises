@@ -9,15 +9,17 @@ import com.huyenho.demo.dto.exception.ErrorCode;
 import com.huyenho.demo.entity.Department;
 import com.huyenho.demo.mapper.IDepartmentMapper;
 import com.huyenho.demo.service.IDepartmentService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -53,7 +55,17 @@ public class DepartmentController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addDepartment(@RequestBody DepartmentRequest dp) {
+    public ResponseEntity<?> addDepartment(@Valid @RequestBody DepartmentRequest dp, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getAllErrors().forEach(error -> {
+                String nameError = ((FieldError) error).getField();
+                String messageError = error.getDefaultMessage();
+                errors.put(nameError, messageError);
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
+
         Department department = departmentMapper.departmentRequestToDepartment(dp);
         departmentService.addDepartment(department);
         DepartmentResponse departmentResponse = departmentMapper.departmentToDepartmentResponse(department);
@@ -61,7 +73,16 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<DepartmentResponse>> updateEmployee(@PathVariable int id, @RequestBody DepartmentRequest updatedData) {
+    public ResponseEntity<?> updateEmployee(@PathVariable int id, @Valid @RequestBody DepartmentRequest updatedData, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getAllErrors().forEach(error -> {
+                String nameError = ((FieldError) error).getField();
+                String messageError = error.getDefaultMessage();
+                errors.put(nameError, messageError);
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
         Department department = departmentMapper.departmentRequestToDepartment(updatedData);
 
         Department dpm = departmentService.updateDepartment(id, department);

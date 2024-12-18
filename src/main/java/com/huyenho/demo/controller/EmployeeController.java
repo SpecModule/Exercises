@@ -11,13 +11,17 @@ import com.huyenho.demo.dto.exception.ErrorCode;
 import com.huyenho.demo.entity.Employee;
 import com.huyenho.demo.mapper.IEmployeeMapper;
 import com.huyenho.demo.service.IEmployeeService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
@@ -56,7 +60,17 @@ public class EmployeeController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ApiResponse<EmployeeResponse>> addEmployee(@RequestBody EmployeeRequest employee) {
+    public ResponseEntity<?> addEmployee(@Valid @RequestBody EmployeeRequest employee, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getAllErrors().forEach(error -> {
+                String nameError = ((FieldError) error).getField();
+                String messageError = error.getDefaultMessage();
+                errors.put(nameError, messageError);
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
+
         Employee emp = employeeMapper.employeeRequestToEmployee(employee);
         
         employeeService.addEmployee(emp);
@@ -67,7 +81,17 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(@PathVariable int id, @RequestBody EmployeeRequest updatedData) {
+    public ResponseEntity<?> updateEmployee(@PathVariable int id,@Valid @RequestBody EmployeeRequest updatedData, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getAllErrors().forEach(error -> {
+                String nameError = ((FieldError) error).getField();
+                String messageError = error.getDefaultMessage();
+                errors.put(nameError, messageError);
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
+
         Employee emp = employeeMapper.employeeRequestToEmployee(updatedData);
 
         Employee updatedEmployee = employeeService.updateEmployee(id, emp);

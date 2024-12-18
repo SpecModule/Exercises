@@ -19,6 +19,6 @@ public interface IStudentRepository extends JpaRepository<Student, Integer> {
         AND (:fromScore IS NULL OR score >= :fromScore)
         AND (:toScore IS NULL OR score <= :toScore)
     """)
-    List<Student> findByAttr(String name, double fromScore, double toScore);
+    List<Student> findByAttr(String name, Double fromScore, Double toScore);
 
 }

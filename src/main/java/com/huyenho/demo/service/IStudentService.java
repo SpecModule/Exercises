@@ -5,7 +5,9 @@ import com.huyenho.demo.entity.Student;
 import java.util.List;
 
 public interface IStudentService {
-    List<Student> findAll();
+    List<Student> findAll(String name,
+                          Double fromScore,
+                          Double toScore);
 
     Student findById(int id);
 

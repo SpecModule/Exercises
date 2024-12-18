@@ -1,11 +1,15 @@
 package com.huyenho.demo.controller;
 
 import com.huyenho.demo.dto.ApiResponse;
+import com.huyenho.demo.dto.CustomPage;
 import com.huyenho.demo.dto.EmployeeSearchRequest;
 import com.huyenho.demo.dto.JsonResponse;
+import com.huyenho.demo.dto.employee.EmployeeRequest;
+import com.huyenho.demo.dto.employee.EmployeeResponse;
 import com.huyenho.demo.dto.exception.AppException;
 import com.huyenho.demo.dto.exception.ErrorCode;
 import com.huyenho.demo.entity.Employee;
+import com.huyenho.demo.mapper.IEmployeeMapper;
 import com.huyenho.demo.service.IEmployeeService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -26,12 +31,16 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmployeeController {
     IEmployeeService employeeService;
+    IEmployeeMapper employeeMapper;
 
     @GetMapping("")
     public ResponseEntity<?> getAllEmployees(EmployeeSearchRequest employeeSearchRequest,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Employee> employees = employeeService.findByAttributes(employeeSearchRequest, pageable);
-        return ResponseEntity.ok(employees);
+
+        Page<EmployeeResponse> employeeResponses = employees.map(employeeMapper::employeeToEmployeeResponse);
+        
+        return ResponseEntity.ok(employeeResponses);
     }
 
     @GetMapping("/{id}")
@@ -40,23 +49,36 @@ public class EmployeeController {
         if (empl.isEmpty()) {
             throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
         }
-        return JsonResponse.ok(empl);
+        
+        EmployeeResponse employeeResponse = employeeMapper.employeeToEmployeeResponse(empl.get());
+        
+        return JsonResponse.ok(employeeResponse);
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addEmployee(@RequestBody Employee emp) {
-        return JsonResponse.created(employeeService.addEmployee(emp));
+    public ResponseEntity<ApiResponse<EmployeeResponse>> addEmployee(@RequestBody EmployeeRequest employee) {
+        Employee emp = employeeMapper.employeeRequestToEmployee(employee);
+        
+        employeeService.addEmployee(emp);
+        
+        EmployeeResponse employeeResponse = employeeMapper.employeeToEmployeeResponse(emp);
+        
+        return JsonResponse.created(employeeResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Employee>> updateEmployee(@PathVariable int id, @RequestBody Employee updatedData) {
-        Employee updatedEmployee = employeeService.updateEmployee(id, updatedData);
+    public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(@PathVariable int id, @RequestBody EmployeeRequest updatedData) {
+        Employee emp = employeeMapper.employeeRequestToEmployee(updatedData);
+
+        Employee updatedEmployee = employeeService.updateEmployee(id, emp);
 
         if (updatedEmployee == null) {
             throw new AppException(ErrorCode.EMPLOYEE_NOT_EXIST);
         }
 
-        return JsonResponse.ok(updatedEmployee);
+        EmployeeResponse employeeResponse = employeeMapper.employeeToEmployeeResponse(updatedEmployee);
+
+        return JsonResponse.ok(employeeResponse);
     }
 
     @DeleteMapping("/{id}")

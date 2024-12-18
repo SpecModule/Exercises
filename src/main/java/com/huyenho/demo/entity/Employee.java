@@ -21,7 +21,7 @@ public class Employee {
     private LocalDate birthday;
     private String gender;
     private String phone;
-    private double salary;
+    private Double salary;
 
     @ManyToOne
     @JoinColumn(name = "departmentId") // Tên cột khóa ngoại trong bảng Employee

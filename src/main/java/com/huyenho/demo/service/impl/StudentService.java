@@ -25,8 +25,8 @@ public class StudentService implements IStudentService {
 
 
     @Override
-    public List<Student> findAll() {
-        return studentRepository.findAll();
+    public List<Student> findAll(String name, Double fromScore, Double toScore) {
+        return studentRepository.findByAttr(name, fromScore, toScore);
     }
 
     @Override

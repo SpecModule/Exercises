@@ -1,10 +1,11 @@
 package com.huyenho.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,16 +14,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Builder
-//@Table(schema = "students")
-public class Student {
+public class Clazz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String name;
-    private Double score;
+    int id;
+    String name;
 
-    @ManyToOne
-//    @JsonIgnore
-    @JsonIgnoreProperties("students")
-    Clazz clazz;
+    @OneToMany(mappedBy = "clazz")
+    @JsonIgnoreProperties("clazz")
+    List<Student> students;
 }

@@ -1,6 +1,5 @@
-package com.huyenho.demo.dto.employee;
+package com.huyenho.demo.dto.premises;
 
-import com.huyenho.demo.dto.department.DepartmentResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,10 +11,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class EmployeeResponse {
-    int id;
+public class PremisesResponse {
+    String id;
     String name;
-    String gender;
-
-    DepartmentResponse department;
+    String address;
+    String type;
+    Double area;
+    Double rentPrice;
+    LocalDate startDate;
 }
